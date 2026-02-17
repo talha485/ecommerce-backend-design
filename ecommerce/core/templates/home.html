@@ -3,7 +3,19 @@
 
 <h1>Welcome to My Store</h1>
 
-<a href="/products/">View Products</a>
+<h2>Featured Products</h2>
+
+{% for p in products %}
+    <div>
+        <h3>{{ p.name }}</h3>
+        {% if p.image %}
+            <img src="{{ p.image.url }}" width="150">
+        {% endif %}
+        <p>Price: {{ p.price }}</p>
+        <a href="/products/{{ p.id }}/">View Details</a>
+    </div>
+{% endfor %}
+
+<a href="/products/">View All Products</a>
 
 {% endblock %}
-
