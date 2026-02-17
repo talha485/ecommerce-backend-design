@@ -1,11 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="/products/">All</a>
 
-<div class="grid">
-    <form method="get">
-    <input type="text" name="q" placeholder="Search products...">
+{% for cat in categories %}
+    <a href="/products/?category={{ cat.id }}">
+        {{ cat.name }}
+    </a>
+{% endfor %}
+
+<form method="get">
+    <input type="text" name="search" placeholder="Search products">
     <button type="submit">Search</button>
 </form>
+<form method="get">
+    <input type="text" name="search" placeholder="Search products" value="{{ request.GET.search }}">
+
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}"
+                {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                {{ cat.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
 
 {% for product in products %}
     <div class="card">

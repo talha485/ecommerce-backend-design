@@ -1,39 +1,40 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Category
 
-from django.shortcuts import render
-from .models import Product
 
+
+# Home Page — show featured products
 def home(request):
-    return render(request, 'home.html')
-
-def product_list(request):
-    query = request.GET.get("q")
-    category = request.GET.get("category")
-
-    products = Product.objects.all()
-
-    if query:
-        products = products.filter(name__icontains=query)
-
-    if category:
-        products = products.filter(category__iexact=category)
-
-    return render(request, "products.html", {
-        "products": products
-    })
-
-
-
-def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
-    return render(request, 'product_detail.html', {'product': product})
-
-from .models import Product
-
-def home(request):
-    featured_products = Product.objects.all()[:4]  # first 4
+    featured_products = Product.objects.all()[:4]
     return render(request, "home.html", {
         "products": featured_products
     })
 
+
+def product_list(request):
+    products = Product.objects.all()
+    categories = Category.objects.all()  # fetch all categories
+
+    search = request.GET.get("search")
+    category_id = request.GET.get("category")
+
+    if search:
+        products = products.filter(name__icontains=search)
+
+    if category_id:
+        products = products.filter(category_id=category_id)
+
+    return render(request, "products.html", {
+        "products": products,
+        "categories": categories
+    })
+
+
+
+
+# Product Detail Page
+def product_detail(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, "product_detail.html", {
+        "product": product
+    })
