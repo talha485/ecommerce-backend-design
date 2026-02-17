@@ -38,3 +38,53 @@ def product_detail(request, id):
     return render(request, "product_detail.html", {
         "product": product
     })
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+
+# Signup
+def signup_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = User.objects.create_user(username=username, password=password)
+        login(request, user)
+        return redirect('home')
+    return render(request, 'signup.html')
+
+# Login
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')
+
+# Logout
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from .models import CartItem, Product
+
+
+@login_required
+def add_to_cart(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    cart_item, created = CartItem.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect("product_list")
