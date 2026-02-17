@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Your Cart</h2>
+
+{% for item in items %}
+  <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+    <h3>{{ item.product.name }}</h3>
+    <p>Price: {{ item.product.price }}</p>
+    <p>Quantity: {{ item.quantity }}</p>
+    <p>Subtotal: {{ item.product.price|floatformat:2 }}</p>
+  </div>
+{% empty %}
+  <p>Cart is empty</p>
+{% endfor %}
+
+<h3>Total: {{ total }}</h3>
+
+{% endblock %}

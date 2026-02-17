@@ -88,3 +88,18 @@ def add_to_cart(request, id):
         cart_item.save()
 
     return redirect("product_list")
+from django.contrib.auth.decorators import login_required
+from .models import CartItem
+
+@login_required
+def cart_view(request):
+    items = CartItem.objects.filter(user=request.user)
+
+    total = 0
+    for item in items:
+        total += item.product.price * item.quantity
+
+    return render(request, "cart.html", {
+        "items": items,
+        "total": total
+    })
