@@ -10,22 +10,30 @@ def home(request):
         "products": featured_products
     })
 
+from django.core.paginator import Paginator
+from .models import Product, Category
 
 def product_list(request):
-    products = Product.objects.all()
-    categories = Category.objects.all()  # fetch all categories
+    products = Product.objects.all().order_by("-id")
+    categories = Category.objects.all()
 
+    # --- search filter ---
     search = request.GET.get("search")
-    category_id = request.GET.get("category")
-
     if search:
         products = products.filter(name__icontains=search)
 
+    # --- category filter ---
+    category_id = request.GET.get("category")
     if category_id:
         products = products.filter(category_id=category_id)
 
+    # --- pagination ---
+    paginator = Paginator(products, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "products.html", {
-        "products": products,
+        "page_obj": page_obj,
         "categories": categories
     })
 
