@@ -1,46 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ecommerce</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <style>
-        body {
-            font-family: Arial;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-
-        img {
-            max-width: 100%;
-        }
-
-        /* 📱 Mobile view */
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
-    </style>
-</head>
-
 <body>
 
 <h2>Ecommerce Store</h2>
-<hr>
+
+<!-- Navbar -->
+<nav style="padding:10px; border-bottom:1px solid #ddd;">
+    <a href="{% url 'home' %}">Home</a> |
+    <a href="{% url 'product_list' %}">Products</a> |
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'cart' %}">Cart</a> |
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'signup' %}">Signup</a>
+    {% endif %}
+</nav>
 
 {% block content %}{% endblock %}
 
 </body>
-</html>

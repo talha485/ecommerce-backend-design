@@ -1,19 +1,39 @@
-{% extends "base.html" %}
-{% block content %}
-
 <h2>Your Cart</h2>
 
 {% for item in items %}
-  <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+<div class="cart-item" style="border:1px solid #ddd; padding:12px; margin-bottom:10px;">
+
     <h3>{{ item.product.name }}</h3>
     <p>Price: {{ item.product.price }}</p>
-    <p>Quantity: {{ item.quantity }}</p>
-    <p>Subtotal: {{ item.product.price|floatformat:2 }}</p>
-  </div>
+    <p>Subtotal: {{ item.subtotal }}</p>
+
+    <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+
+        <!-- decrease -->
+        <a href="{% url 'cart_decrease' item.id %}">
+            <button>-</button>
+        </a>
+
+        <!-- quantity box -->
+        <input type="text" value="{{ item.quantity }}"
+               style="width:40px; text-align:center;" readonly>
+
+        <!-- increase -->
+        <a href="{% url 'cart_increase' item.id %}">
+            <button>+</button>
+        </a>
+
+        <!-- remove -->
+        <a href="{% url 'cart_remove' item.id %}">
+            <button style="background:red; color:white;">Remove</button>
+        </a>
+
+    </div>
+
+</div>
+
 {% empty %}
-  <p>Cart is empty</p>
+<p>Your cart is empty.</p>
 {% endfor %}
 
 <h3>Total: {{ total }}</h3>
-
-{% endblock %}
